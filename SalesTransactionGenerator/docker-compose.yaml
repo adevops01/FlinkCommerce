@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  jobmanager:
+    image: apache/flink:latest
+    container_name: flink-jobmanager
+    networks:
+      - flinkcommerce_default
+    ports:
+      - "8081:8081"  # Exposing Flink's Web UI port
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager  # Points to the jobmanager container name
+    command: jobmanager
+    deploy:
+      replicas: 1
+
+  taskmanager:
+    image: apache/flink:latest
+    container_name: flink-taskmanager
+    networks:
+      - flinkcommerce_default
+    depends_on:
+      - jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager  # Points to the jobmanager container
+    command: taskmanager
+    deploy:
+      replicas: 1
+
+networks:
+  flinkcommerce_default:
+    external: true
