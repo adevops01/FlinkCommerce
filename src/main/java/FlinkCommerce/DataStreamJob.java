@@ -261,21 +261,21 @@ public class DataStreamJob {
                         connOptions
                 )).name("Insert into sales per month table");
 
-        transactionStream.sinkTo(
-                new Elasticsearch7SinkBuilder<Transaction>()
-                        .setHosts(new HttpHost("localhost", 9200, "http"))
-                        .setEmitter((transaction, runtimeContext, requestIndexer) -> {
+        // transactionStream.sinkTo(
+        //         new Elasticsearch7SinkBuilder<Transaction>()
+        //                 .setHosts(new HttpHost("localhost", 9200, "http"))
+        //                 .setEmitter((transaction, runtimeContext, requestIndexer) -> {
 
-                            String json = convertTransactionToJson(transaction);
+        //                     String json = convertTransactionToJson(transaction);
 
-                            IndexRequest indexRequest = Requests.indexRequest()
-                                    .index("transactions")
-                                    .id(transaction.getTransactionId())
-                                    .source(json, XContentType.JSON);
-                            requestIndexer.add(indexRequest);
-                        })
-                        .build()
-        ).name("Elasticsearch Sink");
+        //                     IndexRequest indexRequest = Requests.indexRequest()
+        //                             .index("transactions")
+        //                             .id(transaction.getTransactionId())
+        //                             .source(json, XContentType.JSON);
+        //                     requestIndexer.add(indexRequest);
+        //                 })
+        //                 .build()
+        // ).name("Elasticsearch Sink");
 
         // Execute program, beginning computation.
         env.execute("Flink Ecommerce Realtime Streaming");
